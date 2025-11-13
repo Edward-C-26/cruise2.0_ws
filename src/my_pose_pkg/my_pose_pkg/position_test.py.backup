@@ -30,7 +30,7 @@ class PositionTester(Node):
         
         self.odom_sub = self.create_subscription(
             Odometry,
-            '/car3/odom',
+            '/ego_racecar/odom',
             self.odom_callback,
             10
         )

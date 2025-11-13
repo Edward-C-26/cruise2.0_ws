@@ -41,7 +41,7 @@ class WaypointRecorder(Node):
         
         self.odom_sub = self.create_subscription(
             Odometry,
-            '/car3/odom',
+            '/ego_racecar/odom',
             self.odom_callback,
             10
         )
@@ -143,40 +143,11 @@ class WaypointRecorder(Node):
         print("="*70 + "\n")
     
     def save_to_file(self):
-        """Append new waypoints to existing waypoint_list.py instead of overwriting"""
-
+        """Save waypoints to file"""
+        
         current_dir = os.path.dirname(os.path.abspath(__file__))
         file_path = os.path.join(current_dir, 'waypoint_list.py')
-
-        # Try to load existing data if file exists
-        existing_trackin = []
-        existing_trackout = []
-
-        if os.path.exists(file_path):
-            try:
-                from importlib import util
-                spec = util.spec_from_file_location("waypoint_list", file_path)
-                module = util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-
-                wp = module.WayPoints()
-                existing_trackin = wp.get_trackin()
-                existing_trackout = wp.get_trackout()
-            except Exception as e:
-                print(f"Warning: failed to load existing waypoints ({e}). Starting fresh.")
-
-        # Merge without duplicates
-        def merge_unique(old_list, new_list):
-            result = old_list.copy()
-            for wp in new_list:
-                if wp not in result:
-                    result.append(wp)
-            return result
-
-        merged_trackin = merge_unique(existing_trackin, self.trackin_waypoints)
-        merged_trackout = merge_unique(existing_trackout, self.trackout_waypoints)
-
-        # Generate output
+        
         content = '''#!/usr/bin/env python3
 """
 waypoint_list.py - F1TENTH Waypoint数据
@@ -192,23 +163,25 @@ class WayPoints:
         # Track IN (inner track)
         self.trackin_waypoints = [
 '''
-        if merged_trackin:
-            for i, wp in enumerate(merged_trackin):
+        
+        if self.trackin_waypoints:
+            for i, wp in enumerate(self.trackin_waypoints):
                 content += f"            {wp},  # waypoint {i}\n"
         else:
             content += "            # empty\n"
-
+        
         content += '''        ]
         
         # Track OUT (outer track)
         self.trackout_waypoints = [
 '''
-        if merged_trackout:
-            for i, wp in enumerate(merged_trackout):
+        
+        if self.trackout_waypoints:
+            for i, wp in enumerate(self.trackout_waypoints):
                 content += f"            {wp},  # waypoint {i}\n"
         else:
             content += "            # empty\n"
-
+        
         content += '''        ]
     
     def get_trackin(self):
@@ -229,22 +202,20 @@ if __name__ == '__main__':
     print(f"Track IN: {len(wp.get_trackin())} waypoints")
     print(f"Track OUT: {len(wp.get_trackout())} waypoints")
 '''
-
-        # Write merged content
+        
         try:
             with open(file_path, 'w', encoding='utf-8') as f:
                 f.write(content)
-
+            
             print("\n" + "="*70)
-            print("Waypoints appended and saved successfully!")
+            print("Saved successfully!")
             print(f"File: {file_path}")
-            print(f"Track IN:  {len(merged_trackin)} total waypoints")
-            print(f"Track OUT: {len(merged_trackout)} total waypoints")
+            print(f"Track IN:  {len(self.trackin_waypoints)} waypoints")
+            print(f"Track OUT: {len(self.trackout_waypoints)} waypoints")
             print("="*70 + "\n")
-
+            
         except Exception as e:
             print(f"\nSave failed: {e}\n")
-
     
     def exit_program(self):
         """Exit program"""
