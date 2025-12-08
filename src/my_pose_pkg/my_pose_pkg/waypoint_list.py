@@ -69,6 +69,83 @@ class WayPoints:
             [-2.4, 2.1],  # waypoint 54
             [-2.1, 2.0],  # waypoint 55
             [-1.9, 1.8],  # waypoint 56
+            [0.4, -0.6],  # waypoint 57
+            [0.2, -0.8],  # waypoint 58
+            [0.1, -0.9],  # waypoint 59
+            [-0.1, -1.0],  # waypoint 60
+            [-0.3, -1.1],  # waypoint 61
+            [-0.5, -1.2],  # waypoint 62
+            [-0.8, -1.4],  # waypoint 63
+            [-1.0, -1.5],  # waypoint 64
+            [-1.2, -1.6],  # waypoint 65
+            [-1.4, -1.7],  # waypoint 66
+            [-1.6, -1.9],  # waypoint 67
+            [-1.8, -2.1],  # waypoint 68
+            [-2.0, -2.2],  # waypoint 69
+            [-2.0, -2.5],  # waypoint 70
+            [-2.1, -2.8],  # waypoint 71
+            [-2.0, -3.1],  # waypoint 72
+            [-2.0, -3.2],  # waypoint 73
+
+
+
+            [0.5, -0.6],  # waypoint 77
+            [0.4, -0.7],  # waypoint 78
+            [0.0, -0.9],  # waypoint 79
+            [-0.2, -1.0],  # waypoint 80
+            [-0.4, -1.2],  # waypoint 81
+            [-0.6, -1.3],  # waypoint 82
+            [-1.1, -1.5],  # waypoint 83
+            [-1.3, -1.6],  # waypoint 84
+
+            [-1.5, -1.8],  # waypoint 86
+            [-1.8, -2.0],  # waypoint 87
+            [-1.9, -2.4],  # waypoint 88
+            [-2.0, -2.6],  # waypoint 89
+            [-2.0, -3.0],  # waypoint 90
+            [-1.9, -3.2],  # waypoint 91
+            [-1.7, -3.7],  # waypoint 92
+            [-1.4, -3.8],  # waypoint 93
+            [-1.1, -3.9],  # waypoint 94
+            [-0.5, -3.9],  # waypoint 95
+            [-0.4, -3.8],  # waypoint 96
+            [-0.2, -3.7],  # waypoint 97
+            [0.0, -3.5],  # waypoint 98
+            [0.3, -3.5],  # waypoint 99
+            [0.4, -3.2],  # waypoint 100
+            [0.5, -3.0],  # waypoint 101
+            [0.8, -3.0],  # waypoint 102
+            [0.9, -2.7],  # waypoint 103
+            [1.1, -2.5],  # waypoint 104
+            [1.3, -2.4],  # waypoint 105
+            [1.5, -2.2],  # waypoint 106
+            [1.7, -2.1],  # waypoint 107
+            [1.9, -2.0],  # waypoint 108
+            [2.1, -1.9],  # waypoint 109
+            [2.4, -1.8],  # waypoint 110
+            [2.6, -1.7],  # waypoint 111
+            [2.9, -1.7],  # waypoint 112
+            [3.2, -1.6],  # waypoint 113
+            [3.4, -1.5],  # waypoint 114
+            [3.6, -1.3],  # waypoint 115
+            [3.7, -1.0],  # waypoint 116
+            [3.7, -0.8],  # waypoint 117
+            [3.7, -0.6],  # waypoint 118
+            [3.7, -0.4],  # waypoint 119
+            [3.5, -0.1],  # waypoint 120
+            [3.3, 0.2],  # waypoint 121
+            [3.0, 0.4],  # waypoint 122
+            [2.7, 0.4],  # waypoint 123
+            [2.4, 0.4],  # waypoint 124
+            [2.3, 0.4],  # waypoint 125
+            [2.1, 0.2],  # waypoint 126
+            [1.9, 0.2],  # waypoint 127
+            [1.8, 0.1],  # waypoint 128
+            [1.6, -0.0],  # waypoint 129
+            [1.4, -0.2],  # waypoint 130
+            [1.2, -0.3],  # waypoint 131
+            [1.0, -0.4],  # waypoint 132
+            [0.7, -0.5],  # waypoint 133
         ]
         
         # Track OUT (outer track)
@@ -129,6 +206,38 @@ class WayPoints:
             [-2.8, 1.7],  # waypoint 53
             [-2.5, 1.5],  # waypoint 54
             [-2.2, 1.4],  # waypoint 55
+            [0.2, -0.3],  # waypoint 56
+            [0.0, -0.4],  # waypoint 57
+            [-0.2, -0.5],  # waypoint 58
+            [-0.4, -0.6],  # waypoint 59
+            [-0.6, -0.8],  # waypoint 60
+            [-0.9, -0.9],  # waypoint 61
+            [-1.1, -1.0],  # waypoint 62
+            [-1.3, -1.1],  # waypoint 63
+            [-1.6, -1.3],  # waypoint 64
+            [-1.8, -1.4],  # waypoint 65
+            [-2.0, -1.5],  # waypoint 66
+            [-2.2, -1.7],  # waypoint 67
+            [-2.4, -2.0],  # waypoint 68
+            [-2.5, -2.3],  # waypoint 69
+            [-2.5, -2.5],  # waypoint 70
+            [-2.5, -2.8],  # waypoint 71
+            [-2.5, -3.0],  # waypoint 72
+            [-2.4, -3.3],  # waypoint 73
+            [-2.3, -3.6],  # waypoint 74
+            [-2.1, -3.7],  # waypoint 75
+            [-0.3, -0.5],  # waypoint 76
+            [-0.5, -0.6],  # waypoint 77
+            [-0.7, -0.8],  # waypoint 78
+            [-1.5, -1.2],  # waypoint 79
+            [-1.9, -1.5],  # waypoint 80
+            [-2.3, -1.9],  # waypoint 81
+            [-2.4, -2.2],  # waypoint 82
+            [-2.4, -3.1],  # waypoint 83
+            [-2.3, -3.3],  # waypoint 84
+            [-2.2, -3.6],  # waypoint 85
+            [-2.0, -3.8],  # waypoint 86
+            [0.4, 3.4],  # waypoint 87
         ]
     
     def get_trackin(self):
