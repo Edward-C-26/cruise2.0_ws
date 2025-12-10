@@ -315,43 +315,97 @@ class PurePursuit(Node):
         self.get_logger().info(f'Lane switched: {old_lane} -> {requested_lane}')
 
     def switch_lane(self, lane_name):
-        """Switch to a different lane waypoint file"""
+        """Switch to a different lane waypoint file with directional matching"""
         if lane_name not in self.lane_files:
             self.get_logger().error(f'Lane {lane_name} not found!')
             return False
         
         try:
-            # Store current target waypoint position before switching
-            current_target_x = self.path_points_x[self.goal]
-            current_target_y = self.path_points_y[self.goal]
+            # Store current state before switching
+            current_goal_idx = self.goal
+            current_target_x = self.path_points_x[current_goal_idx]
+            current_target_y = self.path_points_y[current_goal_idx]
             
-            self.get_logger().info(f'Current target waypoint: ({current_target_x:.2f}, {current_target_y:.2f})')
+            # Calculate direction vector from current trajectory
+            # Look ahead a few waypoints to get direction
+            lookahead_points = min(5, self.wp_size - 1)
+            next_idx = (current_goal_idx + lookahead_points) % self.wp_size
+            direction_x = self.path_points_x[next_idx] - current_target_x
+            direction_y = self.path_points_y[next_idx] - current_target_y
+            direction_mag = math.sqrt(direction_x**2 + direction_y**2)
+            
+            if direction_mag > 0:
+                direction_x /= direction_mag
+                direction_y /= direction_mag
+            
+            self.get_logger().info(
+                f'Current target: ({current_target_x:.2f}, {current_target_y:.2f}), '
+                f'Direction: ({direction_x:.2f}, {direction_y:.2f})'
+            )
             
             # Load new waypoints
             self.read_waypoints(lane_name)
             self.current_lane = lane_name
             
-            # Find closest waypoint on new track to the old target waypoint
-            min_dist = float('inf')
+            # Find best matching waypoint considering both distance and direction
+            best_score = float('-inf')
             best_idx = 0
             
             for i in range(self.wp_size):
-                dist = self.dist(
-                    (self.path_points_x[i], self.path_points_y[i]),
-                    (current_target_x, current_target_y)
-                )
-                if dist < min_dist:
-                    min_dist = dist
+                new_x = self.path_points_x[i]
+                new_y = self.path_points_y[i]
+                
+                # Distance from old target to new candidate
+                dist = self.dist((new_x, new_y), (current_target_x, current_target_y))
+                
+                # Direction vector at candidate waypoint (look ahead a few points)
+                lookahead_new = min(5, self.wp_size - 1)
+                next_new_idx = (i + lookahead_new) % self.wp_size
+                new_dir_x = self.path_points_x[next_new_idx] - new_x
+                new_dir_y = self.path_points_y[next_new_idx] - new_y
+                new_dir_mag = math.sqrt(new_dir_x**2 + new_dir_y**2)
+                
+                if new_dir_mag > 0:
+                    new_dir_x /= new_dir_mag
+                    new_dir_y /= new_dir_mag
+                
+                # Dot product to measure direction alignment (-1 to 1)
+                # 1 = same direction, -1 = opposite direction
+                direction_alignment = direction_x * new_dir_x + direction_y * new_dir_y
+                
+                # Combined score: prioritize direction alignment, penalize distance
+                # High positive score = good match
+                # Weight direction heavily (×10) and penalize distance
+                score = direction_alignment * 10.0 - dist * 0.5
+                
+                if score > best_score:
+                    best_score = score
                     best_idx = i
             
-            # Set the goal to the closest waypoint on new track
+            # Set the goal to the best matching waypoint
             self.goal = best_idx
             new_target_x = self.path_points_x[self.goal]
             new_target_y = self.path_points_y[self.goal]
             
+            # Calculate alignment and distance for logging
+            lookahead_final = min(5, self.wp_size - 1)
+            next_new_idx = (best_idx + lookahead_final) % self.wp_size
+            final_dir_x = self.path_points_x[next_new_idx] - new_target_x
+            final_dir_y = self.path_points_y[next_new_idx] - new_target_y
+            final_dir_mag = math.sqrt(final_dir_x**2 + final_dir_y**2)
+            if final_dir_mag > 0:
+                final_dir_x /= final_dir_mag
+                final_dir_y /= final_dir_mag
+            final_alignment = direction_x * final_dir_x + direction_y * final_dir_y
+            
+            final_dist = self.dist((new_target_x, new_target_y), (current_target_x, current_target_y))
+            
             self.get_logger().info(
-                f'New target waypoint: ({new_target_x:.2f}, {new_target_y:.2f}), '
-                f'Distance: {min_dist:.2f}m, Index: {best_idx}'
+                f'New target waypoint: ({new_target_x:.2f}, {new_target_y:.2f})\n'
+                f'  Cross-track distance: {final_dist:.2f}m\n'
+                f'  Direction alignment: {final_alignment:.3f} (1.0=perfect)\n'
+                f'  Waypoint index: {best_idx}/{self.wp_size}\n'
+                f'  Score: {best_score:.2f}'
             )
             
             # Publish status
@@ -359,7 +413,7 @@ class PurePursuit(Node):
             status_msg.data = f'Switched to {lane_name} lane'
             self.lane_status_pub.publish(status_msg)
             
-            self.get_logger().info(f'✓ Successfully switched to {lane_name} lane ({self.wp_size} waypoints)')
+            self.get_logger().info(f'✓ Successfully switched to {lane_name} lane')
             return True
             
         except Exception as e:
