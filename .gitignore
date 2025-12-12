@@ -1,8 +1,3 @@
-build/
-install/
-log/
+.DS_Store
 __pycache__/
-src/f1tenth_system/
-src/motion_capture_tracking/
-src/my_pose_pkg/
-src/realsense-ros/
+*.pyc
